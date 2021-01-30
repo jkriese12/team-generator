@@ -18,7 +18,7 @@ const createFile = () => {
     err ? console.error(err) : console.log("It worked! Enjoy your team roster")
   );
 };
-// Main function
+// Main function running all prompts
 const generateTeam = () => {
   inquirer
     .prompt([
@@ -70,6 +70,7 @@ const generateTeam = () => {
       },
     ])
     .then((response) => {
+      // If else logic determing which class to direct input to based on user choice of role
       if (response.role === "Manager") {
         let roleChoice = new Manager(
           response.name,
@@ -95,8 +96,10 @@ const generateTeam = () => {
         );
         fullTeam.push(roleChoice);
       }
+      // Restarts function if user wants to add another user
       if (response.continue === "Yes") {
         generateTeam();
+        // If user is done adding employees creates the HTML file
       } else {
         createFile();
       }
