@@ -12,13 +12,17 @@ const render = require("./lib/htmlRenderer");
 
 // Array holding all data
 const fullTeam = [];
-
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
+// Function to create file
+const createFile = () => {
+  fs.writeFile(outputPath, render(fullTeam), (err) =>
+    err ? console.error(err) : console.log("It worked! Enjoy your team roster")
+  );
+};
+// Main function
 const generateTeam = () => {
   inquirer
     .prompt([
-      // Gathering all information for team member that will be constant
+      // Prompts for user for input, WHEN statements added to determine which questions to ask based on role choice
       {
         type: "input",
         message: "Please type in your name",
@@ -69,34 +73,33 @@ const generateTeam = () => {
       if (response.role === "Manager") {
         let roleChoice = new Manager(
           response.name,
-          response.email,
           response.id,
+          response.email,
           response.office
         );
         fullTeam.push(roleChoice);
       } else if (response.role === "Intern") {
         let roleChoice = new Intern(
           response.name,
-          response.email,
           response.id,
+          response.email,
           response.school
         );
         fullTeam.push(roleChoice);
       } else {
         let roleChoice = new Engineer(
           response.name,
-          response.email,
           response.id,
+          response.email,
           response.git
         );
         fullTeam.push(roleChoice);
-        if (response.continue === "Yes") {
-          generateTeam();
-        } else {
-          console.log("Yay!");
-        }
       }
-      console.log(fullTeam);
+      if (response.continue === "Yes") {
+        generateTeam();
+      } else {
+        createFile();
+      }
     });
 };
 generateTeam();
